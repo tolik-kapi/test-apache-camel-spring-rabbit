@@ -1,0 +1,16 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user1
+    password: user1
+
+camel:
+  spring-rabbitmq:
+    auto-declare: false
+
+events:
+  numbers:
+    routing-key: num.*
+    queue: event-numbers
+    exchange: ex-number-updates
