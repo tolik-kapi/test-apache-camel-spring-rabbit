@@ -8,19 +8,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CamelRoute extends RouteBuilder {
 
-    private static final String SPRING_RABBIT_URI = "spring-rabbitmq:{{events.numbers.exchange}}"
-            + "?queues={{events.numbers.queue}}"
-            + "&routingKey={{events.numbers.routing-key}}";
+    private static final String SPRING_RABBIT_DEV_URI = "spring-rabbitmq:{{rife.insurance.dev-events.exchange-name}}"
+            + "?queues={{rife.insurance.dev-events.queue-name}}"
+            + "&routingKey={{rife.insurance.events.routing-key}}";
+
+    private static final String SPRING_RABBIT_REC_URI = "spring-rabbitmq:{{rife.insurance.rec-events.exchange-name}}"
+            + "?queues={{rife.insurance.rec-events.queue-name}}"
+            + "&routingKey={{rife.insurance.events.routing-key}}";
 
     @Override
     public void configure() {
 
-        from("timer:hello?period=10000")
-                .transform(simple("Random number ${random(100,999)}"))
-                .log("${body}")
-                .to(SPRING_RABBIT_URI);
+        from(SPRING_RABBIT_DEV_URI)
+                .log("From DEV RabbitMQ: \n ROUTING KEY : ${headers.CamelSpringRabbitmqRoutingKey} \n BODY: ${body}");
 
-        from(SPRING_RABBIT_URI)
-                .log("From RabbitMQ: ${body}");
+        from(SPRING_RABBIT_REC_URI)
+                .log("From REC RabbitMQ: \n ROUTING KEY : ${headers.CamelSpringRabbitmqRoutingKey} \n BODY: ${body}");
     }
 }

@@ -1,16 +1,29 @@
+server:
+  port: 9090
+
 spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: user1
-    password: user1
+    username: guest
+    password: guest
+    virtual-host: INSURANCE-EVENTS
 
 camel:
   spring-rabbitmq:
     auto-declare: false
 
-events:
-  numbers:
-    routing-key: num.*
-    queue: event-numbers
-    exchange: ex-number-updates
+rife:
+  insurance:
+    events:
+      exchange-name: ex-insurance-events
+      routing-key: Mobility.*
+      queue-name: qu-insurance-events.mobility
+      redelivery-delay: 5000
+      max-redeliveries: 2
+    dev-events:
+      exchange-name: ex-insurance-events-dev
+      queue-name: qu-insurance-events-dev.mobility
+    rec-events:
+      exchange-name: ex-insurance-events-rec
+      queue-name: qu-insurance-events-rec.mobility

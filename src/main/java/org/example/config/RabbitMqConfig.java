@@ -24,21 +24,14 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.port:5672}")
     private int port;
 
+    @Value("${spring.rabbitmq.virtual-host}")
+    private String virtualHost;
+
     @Value("${spring.rabbitmq.username}")
     private String username;
 
     @Value("${spring.rabbitmq.password}")
     private String password;
-
-    @Value("${events.numbers.queue}")
-    private String queue;
-
-    @Value("${events.numbers.exchange}")
-    private String exchange;
-
-    @Value("${events.numbers.routing-key}")
-    private String routingKey;
-
 
 
     @Bean
@@ -46,8 +39,9 @@ public class RabbitMqConfig {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(host, port);
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
+        connectionFactory.setVirtualHost(virtualHost);
 
-        log.info("Creating connection factory with: %s @ %s : %s".formatted(username, host, port));
+        log.info("Creating connection factory with: %s @ %s : %s / %s".formatted(username, host, port, virtualHost));
 
         return connectionFactory;
     }
@@ -60,35 +54,35 @@ public class RabbitMqConfig {
         return new RabbitAdmin(connectionFactory());
     }
 
-    /**
-     * This queue will be declared. This means it will be created if it does not exist. Once declared, you can do something
-     * like the following:
-     *
-     * @RabbitListener(queues = "#{@myDurableQueue}")
-     * @Transactional
-     * public void handleMyDurableQueueMessage(CustomDurableDto myMessage) {
-     *    // Anything you want! This can also return a non-void which will queue it back in to the queue attached to @RabbitListener
-     * }
-     */
-    @Bean
-    public Queue myDurableQueue() {
-        return new Queue(queue, true, false, false);
-    }
-
-    /**
-     * The following is a complete declaration of an exchange, a queue and a exchange-queue binding
-     */
+//    /**
+//     * This queue will be declared. This means it will be created if it does not exist. Once declared, you can do something
+//     * like the following:
+//     *
+//     * @RabbitListener(queues = "#{@myDurableQueue}")
+//     * @Transactional
+//     * public void handleMyDurableQueueMessage(CustomDurableDto myMessage) {
+//     *    // Anything you want! This can also return a non-void which will queue it back in to the queue attached to @RabbitListener
+//     * }
+//     */
 //    @Bean
-    public TopicExchange createExchange() {
-        var topic = new TopicExchange(exchange, true, false);
-        topic.setShouldDeclare(false);
-
-        return topic;
-    }
-
-    @Bean
-    public Binding exchangeBinding() {
-        // Important part is the routing key -- this is just an example
-        return BindingBuilder.bind(myDurableQueue()).to(createExchange()).with(routingKey);
-    }
+//    public Queue myDurableQueue() {
+//        return new Queue(queue, true, false, false);
+//    }
+//
+//    /**
+//     * The following is a complete declaration of an exchange, a queue and a exchange-queue binding
+//     */
+////    @Bean
+//    public TopicExchange createExchange() {
+//        var topic = new TopicExchange(exchange, true, false);
+//        topic.setShouldDeclare(false);
+//
+//        return topic;
+//    }
+//
+//    @Bean
+//    public Binding exchangeBinding() {
+//        // Important part is the routing key -- this is just an example
+//        return BindingBuilder.bind(myDurableQueue()).to(createExchange()).with(routingKey);
+//    }
 }
