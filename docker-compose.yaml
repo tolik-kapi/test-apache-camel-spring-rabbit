@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  rabbitmq_hcbe:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq_first_vendor
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  rabbitmq_mitsubishi:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq_second_vendor
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+  activemq_hcbe:
+    image: webcenter/activemq:latest
+    container_name: activemq_first_vendor
+    volumes:
+      - "./activemq/activemq.xml:/conf/activemq.xml"
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+  activemq_mitsubishi:
+    image: webcenter/activemq:latest
+    container_name: activemq_second_vendor
+    volumes:
+      - "./activemq/activemq.xml:/conf/activemq.xml"
+    ports:
+      - "61617:61616"
+      - "8262:8161"

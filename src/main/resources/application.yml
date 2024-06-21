@@ -1,29 +1,54 @@
 server:
-  port: 9090
+  port: 8888
 
 spring:
-  rabbitmq:
+  application:
+    name: TestApacheCamel
+
+camel:
+  springboot:
+    main-run-controller: true
+
+broker:
+  activemq-first-vendor:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+  activemq-second-vendor:
+    broker-url: tcp://localhost:61617
+    user: admin
+    password: admin
+  rabbitmq-first-vendor:
     host: localhost
     port: 5672
     username: guest
     password: guest
-    virtual-host: INSURANCE-EVENTS
+    virtual-host: FIRST-VENDOR-EVENTS
+  rabbitmq-second-vendor:
+    host: localhost
+    port: 5673
+    username: guest
+    password: guest
+    virtual-host: SECOND-VENDOR-EVENTS
 
-camel:
-  spring-rabbitmq:
-    auto-declare: false
 
-rife:
+events:
   insurance:
-    events:
-      exchange-name: ex-insurance-events
-      routing-key: Mobility.*
-      queue-name: qu-insurance-events.mobility
-      redelivery-delay: 5000
-      max-redeliveries: 2
-    dev-events:
-      exchange-name: ex-insurance-events-dev
-      queue-name: qu-insurance-events-dev.mobility
-    rec-events:
-      exchange-name: ex-insurance-events-rec
-      queue-name: qu-insurance-events-rec.mobility
+    multitenant:
+      first-vendor:
+        exchange-name: EX-FIRST-VENDOR
+        queue-name: QU-FIRST-VENDOR
+
+      second-vendor:
+        exchange-name: EX-SECOND-VENDOR
+        queue-name: QU-SECOND-VENDOR
+
+    splitter:
+      dev-events:
+        exchange-name: ex-insurance-events-dev
+        queue-name: qu-insurance-events-dev
+        routing-key: Environment.*
+      test-events:
+        exchange-name: ex-insurance-events-test
+        queue-name: qu-insurance-events-test
+        routing-key: Environment.*
