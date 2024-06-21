@@ -32,12 +32,12 @@ public class FirstVendorRabbitMqConfig {
     }
 
     @Bean
-    RabbitAdmin hcbeAmqpAdmin() {
+    RabbitAdmin firstVendorAmqpAdmin() {
         return new RabbitAdmin(firstVendorConnectionFactory());
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory hcbeListenerContainerFactory(@Qualifier("firstVendorConnectionFactory") CachingConnectionFactory firstVendorConnectionFactory) {
+    public SimpleRabbitListenerContainerFactory firstVendorListenerContainerFactory(@Qualifier("firstVendorConnectionFactory") CachingConnectionFactory firstVendorConnectionFactory) {
         final var factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(firstVendorConnectionFactory);
 

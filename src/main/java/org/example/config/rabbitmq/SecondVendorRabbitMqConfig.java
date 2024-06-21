@@ -32,12 +32,12 @@ public class SecondVendorRabbitMqConfig {
     }
 
     @Bean
-    RabbitAdmin mitsubishiAmqpAdmin() {
+    RabbitAdmin secondVendorAmqpAdmin() {
         return new RabbitAdmin(secondVendorConnectionFactory());
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory mitsubishiListenerContainerFactory(@Qualifier("secondVendorConnectionFactory") CachingConnectionFactory secondVendorConnectionFactory) {
+    public SimpleRabbitListenerContainerFactory secondVendorListenerContainerFactory(@Qualifier("secondVendorConnectionFactory") CachingConnectionFactory secondVendorConnectionFactory) {
         final var factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(secondVendorConnectionFactory);
 
